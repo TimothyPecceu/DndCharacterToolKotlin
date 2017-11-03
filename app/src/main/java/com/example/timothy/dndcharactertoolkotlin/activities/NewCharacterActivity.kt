@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.example.timothy.dndcharactertoolkotlin.R
-import com.example.timothy.dndcharactertoolkotlin.data.tables.Race
-import com.raizlabs.android.dbflow.kotlinextensions.from
-import com.raizlabs.android.dbflow.sql.language.Select
+import com.example.timothy.dndcharactertoolkotlin.data.tables.Class
+import com.example.timothy.dndcharactertoolkotlin.data.tables.Class_Table
+import com.raizlabs.android.dbflow.kotlinextensions.*
 
 class NewCharacterActivity : AppCompatActivity() {
 
@@ -15,7 +15,12 @@ class NewCharacterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_character)
 
-        val names : List<String?> = Select().from(Race::class).queryList().map { race -> race.name }
+        val names : List<String?> =(
+                    select from Class::class
+                    where Class_Table.type.`like`("%base%")
+                    orderBy Class_Table.name.asc()
+                ).list.map { c -> c.name }
+
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, names)
 
         val list : ListView = findViewById(R.id.classList)
